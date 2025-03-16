@@ -4,10 +4,16 @@ const cors = require('cors');
 const nodemailer = require('nodemailer');
 
 const app = express();
-app.use(bodyParser.json());
-app.use(cors()); // Разрешаем CORS-запросы
 
-// Хранилище данных
+// Настройка CORS
+app.use(cors({
+    origin: 'https://onlymyrep.github.io', // Разрешаем запросы только с этого домена
+    methods: ['GET', 'POST', 'OPTIONS'], // Разрешаем только нужные методы
+    allowedHeaders: ['Content-Type'], // Разрешаем только нужные заголовки
+}));
+
+app.use(bodyParser.json());
+
 let dataStore = [];
 
 app.post('/submit', (req, res) => {
@@ -43,8 +49,12 @@ app.post('/submit', (req, res) => {
     });
 });
 
-// Запуск сервера
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Сервер запущен на http://localhost:${PORT}`);
+module.exports = app;
+
+
+app.options('/submit', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', 'https://onlymyrep.github.io');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.status(200).send();
 });
