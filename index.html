@@ -302,7 +302,7 @@ document.getElementById("form").addEventListener("submit", function (event) {
     });
 
     // Отправка данных на сервер
-    fetch('https://raspisaniefulltable-d85rlzjo9-onlymyreps-projects.vercel.app/submit', {
+    fetch('https://raspisaniefulltable-p2nr8iqk6-onlymyreps-projects.vercel.app/submit', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -311,7 +311,10 @@ document.getElementById("form").addEventListener("submit", function (event) {
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Ошибка сети: ' + response.statusText);
+            // Если ответ не OK, выводим статус и текст ошибки
+            return response.text().then(errorText => {
+                throw new Error(`Ошибка сети: ${response.status} (${response.statusText})\n${errorText}`);
+            });
         }
         return response.text();
     })
@@ -323,10 +326,11 @@ document.getElementById("form").addEventListener("submit", function (event) {
         }
     })
     .catch((err) => {
+        // Выводим подробную информацию об ошибке
+        console.error("Ошибка при отправке данных:", err);
         alert("Ошибка при отправке данных: " + err.message); // Обрабатываем ошибку
     });
 });
-
 // Скрытие полей времени при выборе "Выходной" или "Отпуск"
 document.querySelectorAll('.status').forEach(select => {
     select.addEventListener('change', (e) => {
