@@ -279,71 +279,84 @@
     </div>
 
     <script>
-        // Инициализация EmailJS
-        emailjs.init('9_tMAQ1P04QhyA085'); // Ваш User ID
 
-        const btn = document.getElementById("button");
+<script>
+	    // Инициализация EmailJS (если нужно)
+	   // emailjs.init('9_tMAQ1P04QhyA085'); // Ваш User ID
 
-        // Обработчик события для автоматического заполнения имени
-        document.querySelector('input[name="name1"]').addEventListener('input', function (e) {
-            const nameValue = e.target.value; // Получаем значение из первой ячейки имени
-            const nameInputs = document.querySelectorAll('input[class="name"]'); // Все ячейки имени
+	    const btn = document.getElementById("button");
 
-            // Заполняем все ячейки имени значением из первой ячейки
-            nameInputs.forEach(input => {
-                input.value = nameValue;
-            });
-        });
+	    // Обработчик события для автоматического заполнения имени
+	    document.querySelector('input[name="name1"]').addEventListener('input', function (e) {
+	        const nameValue = e.target.value; // Получаем значение из первой ячейки имени
+	        const nameInputs = document.querySelectorAll('input[class="name"]'); // Все ячейки имени
 
-	document.getElementById("form").addEventListener("submit", function (event) {
-	    event.preventDefault();
-
-	    const formData = new FormData(this);
-	    const data = {};
-
-	    formData.forEach((value, key) => {
-	        data[key] = value;
+	        // Заполняем все ячейки имени значением из первой ячейки
+	        nameInputs.forEach(input => {
+	            input.value = nameValue;
+	        });
 	    });
 
-	    // Отправка данных на сервер
+	    // Обработчик отправки формы
+	    document.getElementById("form").addEventListener("submit", function (event) {
+	        event.preventDefault();
 
-	fetch('https://raspisaniefulltable-p4jm3nssf-onlymyreps-projects.vercel.app/submit', {
-	      method: 'POST',
-	      headers: {
-	          'Content-Type': 'application/json',
-	      },
-	      body: JSON.stringify(data),
-	  })
-	
-	document.getElementById("send-email-button").addEventListener("click", function () {
-	    fetch('https://raspisaniefulltable-p4jm3nssf-onlymyreps-projects.vercel.app/send-email', {
-	        method: 'POST',
-	    })
-	    .then(response => response.text())
-	    .then(message => {
-	        alert(message); // "Письмо успешно отправлено"
-	    })
-	    .catch((err) => {
-	        alert("Ошибка при отправке письма: " + err);
+	        const formData = new FormData(this);
+	        const data = {};
+
+	        formData.forEach((value, key) => {
+	            data[key] = value;
+	        });
+
+	        // Отправка данных на сервер
+	        fetch('https://raspisaniefulltable-p4jm3nssf-onlymyreps-projects.vercel.app/submit', {
+	            method: 'POST',
+	            headers: {
+	                'Content-Type': 'application/json',
+	            },
+	            body: JSON.stringify(data),
+	        })
+	        .then(response => response.text()) // Обрабатываем ответ
+	        .then(message => {
+	            alert(message); // Показываем сообщение от сервера
+	        })
+	        .catch((err) => {
+	            alert("Ошибка при отправке данных: " + err); // Обрабатываем ошибку
+	        });
 	    });
-	});
 
-        // Скрытие полей времени при выборе "Выходной" или "Отпуск"
-        document.querySelectorAll('.status').forEach(select => {
-            select.addEventListener('change', (e) => {
-                const row = e.target.closest('tr');
-                const timeStart = row.querySelector('.time-start');
-                const timeEnd = row.querySelector('.time-end');
+	    // Обработчик отправки письма
+	    document.getElementById("send-email-button").addEventListener("click", function () {
+	        fetch('https://raspisaniefulltable-p4jm3nssf-onlymyreps-projects.vercel.app/send-email', {
+	            method: 'POST',
+	        })
+	        .then(response => response.text())
+	        .then(message => {
+	            alert(message); // "Письмо успешно отправлено"
+	        })
+	        .catch((err) => {
+	            alert("Ошибка при отправке письма: " + err);
+	        });
+	    });
 
-                if (e.target.value === 'Выходной' || e.target.value === 'Отпуск') {
-                    timeStart.disabled = true;
-                    timeEnd.disabled = true;
-                } else {
-                    timeStart.disabled = false;
-                    timeEnd.disabled = false;
-                }
-            });
-        });
+	    // Скрытие полей времени при выборе "Выходной" или "Отпуск"
+	    document.querySelectorAll('.status').forEach(select => {
+	        select.addEventListener('change', (e) => {
+	            const row = e.target.closest('tr');
+	            const timeStart = row.querySelector('.time-start');
+	            const timeEnd = row.querySelector('.time-end');
+
+	            if (e.target.value === 'Выходной' || e.target.value === 'Отпуск') {
+	                timeStart.disabled = true;
+	                timeEnd.disabled = true;
+	            } else {
+	                timeStart.disabled = false;
+	                timeEnd.disabled = false;
+	            }
+	        });
+	    });
+</script>
+
     </script>
 </body>
 </html>
