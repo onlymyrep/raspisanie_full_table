@@ -275,12 +275,10 @@
             </table>
 
             <button id="button" type="submit">Отправить расписание</button>
-            <button id="send-email-button">Отправить данные на почту</button>
+            
         </form>
     </div>
 <script>
-    // Инициализация EmailJS (если нужно)
-    // emailjs.init('9_tMAQ1P04QhyA085'); // Ваш User ID
 
     // Обработчик события для автоматического заполнения имени
     document.querySelector('input[name="name1"]').addEventListener('input', function (e) {
@@ -303,55 +301,41 @@
         formData.forEach((value, key) => {
             data[key] = value;
         });
+	document.getElementById("form").addEventListener("submit", function (event) {
+	    event.preventDefault();
 
-        // Отправка данных на сервер
-        fetch('https://raspisaniefulltable-5lqexidu1-onlymyreps-projects.vercel.app/submit', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Ошибка сети: ' + response.statusText);
-            }
-            return response.text();
-        })
-        .then(message => {
-            if (message) {
-                alert(message); // Показываем сообщение от сервера
-            } else {
-                alert('Пустой ответ от сервера');
-            }
-        })
-        .catch((err) => {
-            alert("Ошибка при отправке данных: " + err.message); // Обрабатываем ошибку
-        });
-    });
+	    const formData = new FormData(this);
+	    const data = {};
 
-    // Обработчик отправки письма
-    document.getElementById("send-email-button").addEventListener("click", function () {
-        fetch('https://raspisaniefulltable-5lqexidu1-onlymyreps-projects.vercel.app/send-email', {
-            method: 'POST',
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Ошибка сети: ' + response.statusText);
-            }
-            return response.text();
-        })
-        .then(message => {
-            if (message) {
-                alert(message); // "Письмо успешно отправлено"
-            } else {
-                alert('Пустой ответ от сервера');
-            }
-        })
-        .catch((err) => {
-            alert("Ошибка при отправке письма: " + err.message);
-        });
-    });
+	    formData.forEach((value, key) => {
+	        data[key] = value;
+	    });
+
+	    // Отправка данных на сервер
+	    fetch('https://raspisaniefulltable-k79g6muvx-onlymyreps-projects.vercel.app/submit', {
+	        method: 'POST',
+	        headers: {
+	            'Content-Type': 'application/json',
+	        },
+	        body: JSON.stringify(data),
+	    })
+	    .then(response => {
+	        if (!response.ok) {
+	            throw new Error('Ошибка сети: ' + response.statusText);
+	        }
+	        return response.text();
+	    })
+	    .then(message => {
+	        if (message) {
+	            alert(message); // Показываем сообщение от сервера
+	        } else {
+	            alert('Пустой ответ от сервера');
+	        }
+	    })
+	    .catch((err) => {
+	        alert("Ошибка при отправке данных: " + err.message); // Обрабатываем ошибку
+	    });
+	});
 
     // Скрытие полей времени при выборе "Выходной" или "Отпуск"
     document.querySelectorAll('.status').forEach(select => {
