@@ -315,6 +315,12 @@
                 },
                 body: JSON.stringify(data),
             })
+	    .then(response => {
+		if (!response.ok) {
+		    throw new Error('Ошибка сети');
+		    }
+		    return response.text();
+		})
             .then(response => response.text()) // Обрабатываем ответ
             .then(message => {
                 alert(message); // Показываем сообщение от сервера
@@ -329,6 +335,14 @@
             fetch('https://raspisaniefulltable-pt62xmzj6-onlymyreps-projects.vercel.app/send-email', {
                 method: 'POST',
             })
+
+		.then(response => {
+		    if (!response.ok) {
+		        throw new Error('Ошибка сети');
+		    }
+		    return response.text();
+		})
+
             .then(response => response.text())
             .then(message => {
                 alert(message); // "Письмо успешно отправлено"
