@@ -307,50 +307,51 @@
                 data[key] = value;
             });
 
-            // Отправка данных на сервер
-            fetch('https://raspisaniefulltable-pt62xmzj6-onlymyreps-projects.vercel.app/submit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
+	fetch('https://raspisaniefulltable-pt62xmzj6-onlymyreps-projects.vercel.app/submit', {
+	    method: 'POST',
+	    headers: {
+	        'Content-Type': 'application/json',
+	    },
+	    body: JSON.stringify(data),
+	})
+	.then(response => {
+	    if (!response.ok) {
+	        throw new Error('Ошибка сети: ' + response.statusText);
+	    }
+	    return response.text();
+	})
+	.then(message => {
+	    if (message) {
+	        alert(message); // Показываем сообщение от сервера
+	    } else {
+	        alert('Пустой ответ от сервера');
+	    }
+	})
+	.catch((err) => {
+	    alert("Ошибка при отправке данных: " + err.message); // Обрабатываем ошибку
+	});
+
+	document.getElementById("send-email-button").addEventListener("click", function () {
+	    fetch('https://raspisaniefulltable-pt62xmzj6-onlymyreps-projects.vercel.app/send-email', {
+	        method: 'POST',
+	    })
 	    .then(response => {
-		if (!response.ok) {
-		    throw new Error('Ошибка сети');
-		    }
-		    return response.text();
-		})
-            .then(response => response.text()) // Обрабатываем ответ
-            .then(message => {
-                alert(message); // Показываем сообщение от сервера
-            })
-            .catch((err) => {
-                alert("Ошибка при отправке данных: " + err); // Обрабатываем ошибку
-            });
-        });
-
-        // Обработчик отправки письма
-        document.getElementById("send-email-button").addEventListener("click", function () {
-            fetch('https://raspisaniefulltable-pt62xmzj6-onlymyreps-projects.vercel.app/send-email', {
-                method: 'POST',
-            })
-
-		.then(response => {
-		    if (!response.ok) {
-		        throw new Error('Ошибка сети');
-		    }
-		    return response.text();
-		})
-
-            .then(response => response.text())
-            .then(message => {
-                alert(message); // "Письмо успешно отправлено"
-            })
-            .catch((err) => {
-                alert("Ошибка при отправке письма: " + err);
-            });
-        });
+	        if (!response.ok) {
+	            throw new Error('Ошибка сети: ' + response.statusText);
+	        }
+	        return response.text();
+	    })
+	    .then(message => {
+	        if (message) {
+	            alert(message); // "Письмо успешно отправлено"
+	        } else {
+	            alert('Пустой ответ от сервера');
+	        }
+	    })
+	    .catch((err) => {
+	        alert("Ошибка при отправке письма: " + err.message);
+	    });
+	});
 
         // Скрытие полей времени при выборе "Выходной" или "Отпуск"
         document.querySelectorAll('.status').forEach(select => {
