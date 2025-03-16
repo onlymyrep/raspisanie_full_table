@@ -278,97 +278,98 @@
             <button id="send-email-button">Отправить данные на почту</button>
         </form>
     </div>
+<script>
+    // Инициализация EmailJS (если нужно)
+    // emailjs.init('9_tMAQ1P04QhyA085'); // Ваш User ID
 
-    <script>
-        // Инициализация EmailJS (если нужно)
-        emailjs.init('9_tMAQ1P04QhyA085'); // Ваш User ID
+    // Обработчик события для автоматического заполнения имени
+    document.querySelector('input[name="name1"]').addEventListener('input', function (e) {
+        const nameValue = e.target.value; // Получаем значение из первой ячейки имени
+        const nameInputs = document.querySelectorAll('input[class="name"]'); // Все ячейки имени
 
-        const btn = document.getElementById("button");
+        // Заполняем все ячейки имени значением из первой ячейки
+        nameInputs.forEach(input => {
+            input.value = nameValue;
+        });
+    });
 
-        // Обработчик события для автоматического заполнения имени
-        document.querySelector('input[name="name1"]').addEventListener('input', function (e) {
-            const nameValue = e.target.value; // Получаем значение из первой ячейки имени
-            const nameInputs = document.querySelectorAll('input[class="name"]'); // Все ячейки имени
+    // Обработчик отправки формы
+    document.getElementById("form").addEventListener("submit", function (event) {
+        event.preventDefault();
 
-            // Заполняем все ячейки имени значением из первой ячейки
-            nameInputs.forEach(input => {
-                input.value = nameValue;
-            });
+        const formData = new FormData(this);
+        const data = {};
+
+        formData.forEach((value, key) => {
+            data[key] = value;
         });
 
-        // Обработчик отправки формы
-        document.getElementById("form").addEventListener("submit", function (event) {
-            event.preventDefault();
-
-            const formData = new FormData(this);
-            const data = {};
-
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
-
-	fetch('https://raspisaniefulltable-pt62xmzj6-onlymyreps-projects.vercel.app/submit', {
-	    method: 'POST',
-	    headers: {
-	        'Content-Type': 'application/json',
-	    },
-	    body: JSON.stringify(data),
-	})
-	.then(response => {
-	    if (!response.ok) {
-	        throw new Error('Ошибка сети: ' + response.statusText);
-	    }
-	    return response.text();
-	})
-	.then(message => {
-	    if (message) {
-	        alert(message); // Показываем сообщение от сервера
-	    } else {
-	        alert('Пустой ответ от сервера');
-	    }
-	})
-	.catch((err) => {
-	    alert("Ошибка при отправке данных: " + err.message); // Обрабатываем ошибку
-	});
-
-	document.getElementById("send-email-button").addEventListener("click", function () {
-	    fetch('https://raspisaniefulltable-pt62xmzj6-onlymyreps-projects.vercel.app/send-email', {
-	        method: 'POST',
-	    })
-	    .then(response => {
-	        if (!response.ok) {
-	            throw new Error('Ошибка сети: ' + response.statusText);
-	        }
-	        return response.text();
-	    })
-	    .then(message => {
-	        if (message) {
-	            alert(message); // "Письмо успешно отправлено"
-	        } else {
-	            alert('Пустой ответ от сервера');
-	        }
-	    })
-	    .catch((err) => {
-	        alert("Ошибка при отправке письма: " + err.message);
-	    });
-	});
-
-        // Скрытие полей времени при выборе "Выходной" или "Отпуск"
-        document.querySelectorAll('.status').forEach(select => {
-            select.addEventListener('change', (e) => {
-                const row = e.target.closest('tr');
-                const timeStart = row.querySelector('.time-start');
-                const timeEnd = row.querySelector('.time-end');
-
-                if (e.target.value === 'Выходной' || e.target.value === 'Отпуск') {
-                    timeStart.disabled = true;
-                    timeEnd.disabled = true;
-                } else {
-                    timeStart.disabled = false;
-                    timeEnd.disabled = false;
-                }
-            });
+        // Отправка данных на сервер
+        fetch('https://raspisaniefulltable-pt62xmzj6-onlymyreps-projects.vercel.app/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка сети: ' + response.statusText);
+            }
+            return response.text();
+        })
+        .then(message => {
+            if (message) {
+                alert(message); // Показываем сообщение от сервера
+            } else {
+                alert('Пустой ответ от сервера');
+            }
+        })
+        .catch((err) => {
+            alert("Ошибка при отправке данных: " + err.message); // Обрабатываем ошибку
         });
-    </script>
+    });
+
+    // Обработчик отправки письма
+    document.getElementById("send-email-button").addEventListener("click", function () {
+        fetch('https://raspisaniefulltable-pt62xmzj6-onlymyreps-projects.vercel.app/send-email', {
+            method: 'POST',
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка сети: ' + response.statusText);
+            }
+            return response.text();
+        })
+        .then(message => {
+            if (message) {
+                alert(message); // "Письмо успешно отправлено"
+            } else {
+                alert('Пустой ответ от сервера');
+            }
+        })
+        .catch((err) => {
+            alert("Ошибка при отправке письма: " + err.message);
+        });
+    });
+
+    // Скрытие полей времени при выборе "Выходной" или "Отпуск"
+    document.querySelectorAll('.status').forEach(select => {
+        select.addEventListener('change', (e) => {
+            const row = e.target.closest('tr');
+            const timeStart = row.querySelector('.time-start');
+            const timeEnd = row.querySelector('.time-end');
+
+            if (e.target.value === 'Выходной' || e.target.value === 'Отпуск') {
+                timeStart.disabled = true;
+                timeEnd.disabled = true;
+            } else {
+                timeStart.disabled = false;
+                timeEnd.disabled = false;
+            }
+        });
+    });
+</script>
+
 </body>
 </html>
